@@ -1,0 +1,13 @@
+# Archivo de configuración local con credenciales sensibles
+config.php
+
+# Dependencias (si se usa Composer en el futuro)
+/vendor/
+
+# Archivos del sistema operativo y editores
+Thumbs.db
+.DS_Store
+*.log
+.vscode/
+.idea/
+
