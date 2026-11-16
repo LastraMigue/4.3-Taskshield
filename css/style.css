@@ -1,0 +1,52 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+.container { max-width: 1000px; margin: 0 auto; }
+h1 { margin-bottom: 5px; }
+a { color: #0066cc; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Cabecera y Tarjeta */
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.card { background: #fff; padding: 25px; border-radius: 8px; border: 1px solid #ddd; }
+
+/* Tablas */
+.table-responsive { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #ddd; }
+th, td { padding: 10px 12px; border-bottom: 1px solid #ddd; text-align: left; }
+th { background-color: #f8f9fa; }
+tr:hover { background-color: #f1f1f1; }
+
+/* Badges (Etiquetas) */
+.badge { padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+.badge-prioridad-alta { background: #f8d7da; color: #721c24; }
+.badge-prioridad-media { background: #fff3cd; color: #856404; }
+.badge-prioridad-baja { background: #d4edda; color: #155724; }
+.badge-estado-pendiente { background: #e2e3e5; color: #383d41; }
+.badge-estado-en-proceso { background: #cce5ff; color: #004085; }
+.badge-estado-resuelta { background: #d4edda; color: #155724; }
+
+/* Mensajes de éxito y error */
+.msg { background: #d4edda; color: #155724; padding: 12px; border-radius: 5px; margin-bottom: 15px; }
+.error-list { background: #f8d7da; color: #721c24; padding: 10px 25px; border-radius: 5px; margin-bottom: 15px; }
+
+/* Formularios */
+.form-group { margin-bottom: 15px; }
+label { display: block; font-weight: bold; margin-bottom: 5px; }
+input[type="text"], input[type="email"], select, textarea {
+    width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;
+}
+
+/* Botones y acciones */
+.btn, button {
+    display: inline-block; background: #007bff; color: #fff; padding: 8px 16px;
+    border: none; border-radius: 4px; cursor: pointer; font-weight: bold;
+}
+.btn:hover, button:hover { background: #0056b3; text-decoration: none; }
+.action-links a { margin-right: 8px; font-weight: bold; }
+.back-link { display: inline-block; margin-bottom: 15px; }
