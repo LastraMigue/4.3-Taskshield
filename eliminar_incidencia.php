@@ -1,6 +1,13 @@
 <?php
+/**
+ * =================================
+ * ELIMINACIÓN DE INCIDENCIA
+ * =================================
+ */
+
 require_once __DIR__ . '/includes/conexion.php';
 
+// Validar identificador recibido por la URL
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$id) {
     header("Location: index.php?msg=" . urlencode("ID inválido para eliminar."));
@@ -8,11 +15,11 @@ if (!$id) {
 }
 
 try {
-    // Siempre incluir cláusula WHERE en DELETE
+    // Eliminar incidencia con cláusula WHERE
     $stmt = $pdo->prepare("DELETE FROM incidencias WHERE id = :id");
     $stmt->execute([':id' => $id]);
 
-    // Verificar filas afectadas mediante rowCount()
+    // Comprobar filas afectadas
     if ($stmt->rowCount() > 0) {
         $mensaje = "Incidencia #$id eliminada correctamente.";
     } else {

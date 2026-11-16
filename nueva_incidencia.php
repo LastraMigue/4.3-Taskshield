@@ -1,16 +1,22 @@
 <?php
+/**
+ * ===============================
+ * REGISTRO DE NUEVA INCIDENCIA
+ * ===============================
+ */
+
 require_once __DIR__ . '/includes/conexion.php';
 
 $errores = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // 1. Recuperar, validar y sanitizar con filter_input
-    $titulo = trim((string) filter_input(INPUT_POST, 'titulo', FILTER_SANITIZE_SPECIAL_CHARS));
+    // Recuperar y sanitizar entradas
+    $titulo      = trim((string) filter_input(INPUT_POST, 'titulo', FILTER_SANITIZE_SPECIAL_CHARS));
     $descripcion = trim((string) filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_SPECIAL_CHARS));
-    $prioridad = filter_input(INPUT_POST, 'prioridad', FILTER_SANITIZE_SPECIAL_CHARS);
-    $email = filter_input(INPUT_POST, 'email_cliente', FILTER_VALIDATE_EMAIL);
+    $prioridad   = filter_input(INPUT_POST, 'prioridad', FILTER_SANITIZE_SPECIAL_CHARS);
+    $email       = filter_input(INPUT_POST, 'email_cliente', FILTER_VALIDATE_EMAIL);
 
-    // 2. Validar reglas de negocio
+    // Validación de campos obligatorios y formatos
     if ($titulo === '') {
         $errores[] = 'El título es obligatorio.';
     }
@@ -21,20 +27,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = 'El formato del correo electrónico no es válido.';
     }
 
-    // 3. Insertar en BD si todo es correcto
+    // Inserción en la base de datos
     if (empty($errores)) {
         try {
             $sql = "INSERT INTO incidencias (titulo, descripcion, prioridad, email_cliente) 
                     VALUES (:titulo, :descripcion, :prioridad, :email)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
-                ':titulo' => $titulo,
+                ':titulo'      => $titulo,
                 ':descripcion' => $descripcion,
-                ':prioridad' => $prioridad,
-                ':email' => $email
+                ':prioridad'   => $prioridad,
+                ':email'       => $email
             ]);
 
-            $nuevoId = $pdo->lastInsertId(); // Recupera ID autoincremental
+            $nuevoId = $pdo->lastInsertId();
             header("Location: index.php?creada=" . urlencode($nuevoId));
             exit;
 

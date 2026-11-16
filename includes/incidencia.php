@@ -1,11 +1,11 @@
 <?php
 /**
- * =================================
- * LISTADO Y GESTIÓN DE INCIDENCIAS
- * =================================
+ * ===============================
+ * MODELO DE ENTIDAD INCIDENCIA
+ * ===============================
  */
 
-class incidencia
+class Incidencia
 {
     public int $id;
     public string $titulo;
@@ -15,5 +15,5 @@ class incidencia
     public string $email_cliente;
     public ?int $tecnico_id;
     public ?string $fecha_creacion;
-    public ?string $tecnico; // Campo procedente del JOIN con la tabla técnicos
+    public ?string $tecnico;
 }
