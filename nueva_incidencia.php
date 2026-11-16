@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Inserción en la base de datos
     if (empty($errores)) {
         try {
+            // Sentencia preparada con marcadores para prevenir inyección SQL
             $sql = "INSERT INTO incidencias (titulo, descripcion, prioridad, email_cliente) 
                     VALUES (:titulo, :descripcion, :prioridad, :email)";
             $stmt = $pdo->prepare($sql);
@@ -40,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':email'       => $email
             ]);
 
+            // Recuperar el identificador generado mediante lastInsertId() y redirigir
             $nuevoId = $pdo->lastInsertId();
             header("Location: index.php?creada=" . urlencode($nuevoId));
             exit;
@@ -66,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Registrar Nueva Incidencia</h1>
             <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Introduce los detalles de la incidencia técnica.</p>
 
+            <!-- Notificación de errores de validación -->
             <?php if (!empty($errores)): ?>
                 <ul class="error-list">
                     <?php foreach ($errores as $err): ?>
@@ -74,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </ul>
             <?php endif; ?>
 
+            <!-- Formulario de alta de incidencia -->
             <form method="POST" action="">
                 <div class="form-group">
                     <label for="titulo">Título de la incidencia:</label>

@@ -21,7 +21,7 @@ La aplicación implementa una arquitectura modular que separa la configuración 
 │   └── README.md           # Documentación técnica de arquitectura y pruebas
 ├── index.php               # Panel principal: listado de incidencias activas y asignación
 ├── nueva_incidencia.php    # Formulario de alta y validación de nuevas incidencias
-├── editar_incidencia.php   # Formulario de modificación de incidencias existentes
+├── editar_incidencia.php   # Formulario de modificación del estado de la incidencia
 ├── eliminar_incidencia.php # Controlador de borrado seguro con confirmación
 └── asignar_tecnico.php     # Controlador de asignación con transacciones atómicas
 ```
@@ -64,9 +64,9 @@ La aplicación implementa una arquitectura modular que separa la configuración 
    - Hacer clic en `+ Registrar Nueva Incidencia`.
    - Completar el formulario con datos válidos y pulsar `Guardar Incidencia`.
    - El sistema redirige al panel mostrando un mensaje de confirmación con el ID generado mediante `lastInsertId()`.
-3. **Editar Incidencia**:
+3. **Editar Estado de la Incidencia**:
    - En la fila de una incidencia, hacer clic en `Editar`.
-   - Modificar título, descripción, prioridad o correo, y guardar los cambios.
+   - Modificar el estado (`Pendiente`, `En Proceso` o `Resuelta`) y guardar los cambios. El sistema valida la existencia previa del ID en la base de datos.
 4. **Asignación Rápida de Técnico**:
    - En la columna `Técnico Asignado`, desplegar el selector de la incidencia y elegir un técnico.
    - El formulario envía la petición automáticamente por POST a `asignar_tecnico.php`, ejecuta la transacción (cambia el estado a `En Proceso` y suma +1 tarea activa) y recarga el panel con el aviso de éxito.

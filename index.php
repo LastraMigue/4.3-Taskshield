@@ -18,10 +18,10 @@ $sql = "SELECT i.id, i.titulo, i.descripcion, i.prioridad, i.estado, i.email_cli
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':estado_excluido' => 'Resuelta']);
 
-// Mapeo de filas a objetos de la clase Incidencia
+// Mapeo de filas a objetos de la clase Incidencia mediante FETCH_CLASS
 $incidencias = $stmt->fetchAll(PDO::FETCH_CLASS, 'Incidencia');
 
-// Lista de técnicos para el selector de asignación directa
+// Obtención de técnicos y sus tareas activas para el desplegable de asignación
 $tecnicos = $pdo->query("SELECT id, nombre, tareas_activas FROM tecnicos")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -44,6 +44,7 @@ $tecnicos = $pdo->query("SELECT id, nombre, tareas_activas FROM tecnicos")->fetc
             </div>
         </header>
 
+        <!-- Notificaciones de éxito o mensajes de estado -->
         <?php if (isset($_GET['creada'])): ?>
             <div class="msg">Incidencia creada correctamente con ID #<?= htmlspecialchars($_GET['creada'], ENT_QUOTES, 'UTF-8') ?>.</div>
         <?php elseif (isset($_GET['msg'])): ?>
@@ -71,6 +72,7 @@ $tecnicos = $pdo->query("SELECT id, nombre, tareas_activas FROM tecnicos")->fetc
                             </td>
                         </tr>
                     <?php else: ?>
+                        <!-- Iteración limpia de incidencias activas -->
                         <?php foreach ($incidencias as $inc): ?>
                             <tr>
                                 <td><strong>#<?= (int)$inc->id ?></strong></td>
@@ -92,10 +94,11 @@ $tecnicos = $pdo->query("SELECT id, nombre, tareas_activas FROM tecnicos")->fetc
                                 </td>
                                 <td><?= htmlspecialchars($inc->email_cliente, ENT_QUOTES, 'UTF-8') ?></td>
                                 <td>
+                                    <!-- Selector de asignación directa con envío automático -->
                                     <form method="POST" action="asignar_tecnico.php" style="margin: 0;">
                                         <input type="hidden" name="id" value="<?= (int)$inc->id ?>">
                                         <select name="tecnico_id" onchange="this.form.submit()">
-                                            <option value="">-- Asignar técnico --</option>
+                                            <option value="" <?= empty($inc->tecnico_id) ? 'selected' : '' ?>>-- Sin asignar --</option>
                                             <?php foreach ($tecnicos as $tec): ?>
                                                 <option value="<?= (int)$tec['id'] ?>" <?= (int)$inc->tecnico_id === (int)$tec['id'] ? 'selected' : '' ?>>
                                                     <?= htmlspecialchars($tec['nombre'], ENT_QUOTES, 'UTF-8') ?> (<?= (int)$tec['tareas_activas'] ?> tareas)
@@ -105,10 +108,11 @@ $tecnicos = $pdo->query("SELECT id, nombre, tareas_activas FROM tecnicos")->fetc
                                     </form>
                                 </td>
                                 <td>
+                                    <!-- Enlaces a operaciones de edición y eliminación -->
                                     <div class="action-links">
                                         <a href="editar_incidencia.php?id=<?= (int)$inc->id ?>">Editar</a>
                                         <a href="eliminar_incidencia.php?id=<?= (int)$inc->id ?>" 
-                                           onclick="return confirm('¿Seguro que deseas eliminar la incidencia #<?= (int)$inc->id ?>?');">Eliminar</a>
+                                            onclick="return confirm('¿Seguro que deseas eliminar la incidencia #<?= (int)$inc->id ?>?');">Eliminar</a>
                                     </div>
                                 </td>
                             </tr>

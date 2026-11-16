@@ -5,6 +5,7 @@
  * ===============================
  */
 
+// Clase de dominio para el mapeo tipado de registros mediante PDO::FETCH_CLASS
 class Incidencia
 {
     public int $id;
