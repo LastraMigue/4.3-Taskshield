@@ -28,63 +28,95 @@ $tecnicos = $pdo->query("SELECT id, nombre, tareas_activas FROM tecnicos")->fetc
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Intranet Soporte IT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intranet Soporte IT - TaskShield</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Panel de Incidencias Activas</h1>
-    <p><a href="nueva_incidencia.php">+ Registrar Nueva Incidencia</a></p>
+    <div class="container">
+        <header class="page-header">
+            <div>
+                <h1>Panel de Incidencias Activas</h1>
+                <p class="subtitle">Gestión y asignación de incidencias del departamento de soporte.</p>
+            </div>
+            <div>
+                <a href="nueva_incidencia.php" class="btn btn-primary">+ Registrar Nueva Incidencia</a>
+            </div>
+        </header>
 
-    <?php if (isset($_GET['creada'])): ?>
-        <div class="msg">Incidencia creada correctamente con ID #<?= htmlspecialchars($_GET['creada'], ENT_QUOTES, 'UTF-8') ?>.</div>
-    <?php elseif (isset($_GET['msg'])): ?>
-        <div class="msg"><?= htmlspecialchars($_GET['msg'], ENT_QUOTES, 'UTF-8') ?></div>
-    <?php endif; ?>
+        <?php if (isset($_GET['creada'])): ?>
+            <div class="msg">Incidencia creada correctamente con ID #<?= htmlspecialchars($_GET['creada'], ENT_QUOTES, 'UTF-8') ?>.</div>
+        <?php elseif (isset($_GET['msg'])): ?>
+            <div class="msg"><?= htmlspecialchars($_GET['msg'], ENT_QUOTES, 'UTF-8') ?></div>
+        <?php endif; ?>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Prioridad</th>
-                <th>Estado</th>
-                <th>Cliente</th>
-                <th>Técnico Asignado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($incidencias)): ?>
-                <tr><td colspan="7">No hay incidencias activas registradas.</td></tr>
-            <?php else: ?>
-                <?php foreach ($incidencias as $inc): ?>
+        <div class="table-responsive">
+            <table>
+                <thead>
                     <tr>
-                        <td><?= (int)$inc->id ?></td>
-                        <td><?= htmlspecialchars($inc->titulo, ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><?= htmlspecialchars($inc->prioridad, ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><strong><?= htmlspecialchars($inc->estado, ENT_QUOTES, 'UTF-8') ?></strong></td>
-                        <td><?= htmlspecialchars($inc->email_cliente, ENT_QUOTES, 'UTF-8') ?></td>
-                        <td>
-                            <form method="POST" action="asignar_tecnico.php" style="margin: 0;">
-                                <input type="hidden" name="id" value="<?= (int)$inc->id ?>">
-                                <select name="tecnico_id" onchange="this.form.submit()">
-                                    <option value="">-- Asignar técnico --</option>
-                                    <?php foreach ($tecnicos as $tec): ?>
-                                        <option value="<?= (int)$tec['id'] ?>" <?= (int)$inc->tecnico_id === (int)$tec['id'] ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($tec['nombre'], ENT_QUOTES, 'UTF-8') ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </form>
-                        </td>
-                        <td>
-                            <a href="editar_incidencia.php?id=<?= (int)$inc->id ?>">Editar</a> |
-                            <a href="eliminar_incidencia.php?id=<?= (int)$inc->id ?>" 
-                               onclick="return confirm('¿Seguro que deseas eliminar la incidencia #<?= (int)$inc->id ?>?');">Eliminar</a>
-                        </td>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Prioridad</th>
+                        <th>Estado</th>
+                        <th>Cliente</th>
+                        <th>Técnico Asignado</th>
+                        <th>Acciones</th>
                     </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-    </table>
+                </thead>
+                <tbody>
+                    <?php if (empty($incidencias)): ?>
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
+                                No hay incidencias activas registradas en este momento.
+                            </td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($incidencias as $inc): ?>
+                            <tr>
+                                <td><strong>#<?= (int)$inc->id ?></strong></td>
+                                <td>
+                                    <strong><?= htmlspecialchars($inc->titulo, ENT_QUOTES, 'UTF-8') ?></strong>
+                                    <?php if (!empty($inc->descripcion)): ?>
+                                        <br><small style="color: var(--text-muted);"><?= htmlspecialchars(mb_substr($inc->descripcion, 0, 55), ENT_QUOTES, 'UTF-8') . (mb_strlen($inc->descripcion) > 55 ? '...' : '') ?></small>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span class="badge badge-prioridad-<?= strtolower($inc->prioridad) ?>">
+                                        <?= htmlspecialchars($inc->prioridad, ENT_QUOTES, 'UTF-8') ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-estado-<?= str_replace(' ', '-', strtolower($inc->estado)) ?>">
+                                        <?= htmlspecialchars($inc->estado, ENT_QUOTES, 'UTF-8') ?>
+                                    </span>
+                                </td>
+                                <td><?= htmlspecialchars($inc->email_cliente, ENT_QUOTES, 'UTF-8') ?></td>
+                                <td>
+                                    <form method="POST" action="asignar_tecnico.php" style="margin: 0;">
+                                        <input type="hidden" name="id" value="<?= (int)$inc->id ?>">
+                                        <select name="tecnico_id" onchange="this.form.submit()">
+                                            <option value="">-- Asignar técnico --</option>
+                                            <?php foreach ($tecnicos as $tec): ?>
+                                                <option value="<?= (int)$tec['id'] ?>" <?= (int)$inc->tecnico_id === (int)$tec['id'] ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($tec['nombre'], ENT_QUOTES, 'UTF-8') ?> (<?= (int)$tec['tareas_activas'] ?> tareas)
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </form>
+                                </td>
+                                <td>
+                                    <div class="action-links">
+                                        <a href="editar_incidencia.php?id=<?= (int)$inc->id ?>">Editar</a>
+                                        <a href="eliminar_incidencia.php?id=<?= (int)$inc->id ?>" 
+                                           onclick="return confirm('¿Seguro que deseas eliminar la incidencia #<?= (int)$inc->id ?>?');">Eliminar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

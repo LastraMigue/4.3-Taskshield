@@ -53,47 +53,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Nueva Incidencia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Incidencia - TaskShield</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-    <h1>Registrar Nueva Incidencia</h1>
-    <p><a href="index.php">← Volver al listado</a></p>
+    <div class="container" style="max-width: 650px;">
+        <div class="card">
+            <a href="index.php" class="back-link">← Volver al listado</a>
+            <h1>Registrar Nueva Incidencia</h1>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Introduce los detalles de la incidencia técnica.</p>
 
-    <?php if (!empty($errores)): ?>
-        <ul style="color: red;">
-            <?php foreach ($errores as $err): ?>
-                <li><?= htmlspecialchars($err, ENT_QUOTES, 'UTF-8') ?></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
+            <?php if (!empty($errores)): ?>
+                <ul class="error-list">
+                    <?php foreach ($errores as $err): ?>
+                        <li><?= htmlspecialchars($err, ENT_QUOTES, 'UTF-8') ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
 
-    <form method="POST" action="">
-        <p>
-            <label>Título:<br>
-                <input type="text" name="titulo" required></label>
-        </p>
-        <p>
-            <label>Descripción:<br>
-                <textarea name="descripcion" rows="4" cols="40"></textarea></label>
-        </p>
-        <p>
-            <label>Prioridad:<br>
-                <select name="prioridad">
-                    <option value="Baja">Baja</option>
-                    <option value="Media" selected>Media</option>
-                    <option value="Alta">Alta</option>
-                </select></label>
-        </p>
-        <p>
-            <label>Email del Cliente:<br>
-                <input type="text" name="email_cliente" required></label>
-        </p>
-        <button type="submit">Guardar Incidencia</button>
-    </form>
+            <form method="POST" action="">
+                <div class="form-group">
+                    <label for="titulo">Título de la incidencia:</label>
+                    <input type="text" id="titulo" name="titulo" value="<?= isset($_POST['titulo']) ? htmlspecialchars($_POST['titulo'], ENT_QUOTES, 'UTF-8') : '' ?>" placeholder="Ej. Bloqueo en pasarela de pago" required>
+                </div>
+                <div class="form-group">
+                    <label for="descripcion">Descripción detallada:</label>
+                    <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe los síntomas y pasos para reproducir..."><?= isset($_POST['descripcion']) ? htmlspecialchars($_POST['descripcion'], ENT_QUOTES, 'UTF-8') : '' ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="prioridad">Prioridad:</label>
+                    <select id="prioridad" name="prioridad">
+                        <option value="Baja" <?= (isset($_POST['prioridad']) && $_POST['prioridad'] === 'Baja') ? 'selected' : '' ?>>Baja</option>
+                        <option value="Media" <?= (!isset($_POST['prioridad']) || $_POST['prioridad'] === 'Media') ? 'selected' : '' ?>>Media</option>
+                        <option value="Alta" <?= (isset($_POST['prioridad']) && $_POST['prioridad'] === 'Alta') ? 'selected' : '' ?>>Alta</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="email_cliente">Email del Cliente:</label>
+                    <input type="email" id="email_cliente" name="email_cliente" value="<?= isset($_POST['email_cliente']) ? htmlspecialchars($_POST['email_cliente'], ENT_QUOTES, 'UTF-8') : '' ?>" placeholder="cliente@empresa.com" required>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Guardar Incidencia</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
-
 </html>
