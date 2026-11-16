@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS intranet_soporte CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE intranet_soporte;
+CREATE DATABASE IF NOT EXISTS taskshield_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE taskshield_db;
 
 CREATE TABLE tecnicos (
     id INT AUTO_INCREMENT PRIMARY KEY,

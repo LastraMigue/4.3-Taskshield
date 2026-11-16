@@ -1,5 +1,5 @@
 <?php
-require_once _DIR_ . '/includes/conexion.php';
+require_once __DIR__ . '/includes/conexion.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$id) {
